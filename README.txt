@@ -81,6 +81,6 @@ POST /api/order-items - Create a new order item
 PUT /api/order-items/{id} - Update an existing order item
 DELETE /api/order-items/{id} - Delete an order item by ID
 
-Error Handling
-==============
+Error Handling and Status code
+==============================
 The application handles errors gracefully and returns appropriate HTTP status codes.
