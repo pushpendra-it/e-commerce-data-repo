@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  OrderAPI-app:
+    image: orderapp-docker
+    container_name: order-api-container
+    networks:
+      - psnetwork
+    ports:
+      - "9093:9093"
+    depends_on:
+      - orderapi-mysql-container
+   
+  orderapi-mysql-container:
+    image: mysql:latest
+    container_name: orderapi-mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: crud_1_order_database
+    networks:
+      - psnetwork
+    ports:
+      - "3306:3306"
+networks:
+  psnetwork:
+    driver: bridge
