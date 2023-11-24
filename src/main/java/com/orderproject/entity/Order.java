@@ -62,6 +62,12 @@ public class Order {
 		this.orderDate = orderDate;
 		this.itemList = itemList;
 	}
+	public Order(Long orderId, String orderDate) {
+		super();
+		this.orderId = orderId;
+		this.orderDate = orderDate;
+
+	}
 
 	@Override
 	public String toString() {

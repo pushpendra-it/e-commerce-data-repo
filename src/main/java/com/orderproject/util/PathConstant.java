@@ -3,7 +3,7 @@ package com.orderproject.util;
 public class PathConstant {
 
 	public static final String HEALTH = "/health";
-	public static final String ORDER = "orders";
+	public static final String ORDER = "/order";
 	public static final String GET_ORDERlIST = "/get-order-list"; // Get a list of all orders
 	public static final String SAVE_ORDER = "/save-order"; // Create a new order
 	public static final String GET_ORDER_BYID = "/order/{id}"; // Get an order by ID

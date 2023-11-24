@@ -3,13 +3,23 @@ package com.orderproject.service;
 import java.util.List;
 
 import com.orderproject.entity.OrderItems;
+import com.orderproject.util.ApiResponse;
 
 
 public interface OrderItemService {
 
-	 public  List<OrderItems> getOrderItemList();
-	 public OrderItems getOrderItem(long id);
-	 public OrderItems saveOrderItem(OrderItems order);
-	 public OrderItems updateOrderItem(OrderItems order);
-	 public boolean deleteOrderItem(long id);
+
+	ApiResponse<OrderItems> getOrderitem(long itemId);
+
+	ApiResponse<List<OrderItems>> getAllOrderItems();
+
+	//post request
+	ApiResponse<Void> addNewOrderItem(OrderItems orderItem);
+
+	//put request
+	ApiResponse<Void> updateItemById(long itemId, OrderItems orderItem);
+
+	//delete request
+	ApiResponse<Void> deleteItemById(long itemId);
+
 }

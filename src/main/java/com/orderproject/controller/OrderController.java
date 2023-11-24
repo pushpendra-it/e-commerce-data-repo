@@ -2,6 +2,7 @@ package com.orderproject.controller;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping(value = PathConstant.ORDER)
+@Slf4j
 public class OrderController {
 
 
@@ -48,18 +50,11 @@ public class OrderController {
 	 * @return Response entity with(Status code,message,data with expected response)
 	 */
 	@GetMapping(value = PathConstant.GET_ORDERlIST)
-	public ResponseEntity<ApiResponse<List<Order>>> getAllOrders() {
-		List<Order> orderList = orderServiceImpl.getOrderList();
+	public ResponseEntity<?> getAllOrders() {
+		ApiResponse<List<Order>> orderResponse = (ApiResponse<List<Order>>) orderServiceImpl.getOrderList();
+		HttpStatus httpStatus = HttpStatus.valueOf(orderResponse.getStatusCode());
 
-		if (!orderList.isEmpty()) {
-			ApiResponse<List<Order>> response = new ApiResponse<>(HttpStatus.OK.value(),
-					MessageTemplate.DATA_FETCHED_SUCCSSFULLY, orderList);
-			return ResponseEntity.ok(response);
-		} else {
-			ApiResponse<List<Order>> errorResponse = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), MessageTemplate.DATA_FETCHED_FAILED,
-					null);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-		}
+		return new ResponseEntity<>(orderResponse, httpStatus);
 	}
 
 	/**
@@ -72,13 +67,10 @@ public class OrderController {
 	@PostMapping(value = PathConstant.SAVE_ORDER)
 	public ResponseEntity<?> saveItem(@RequestBody Order order) {
 
-		try {
-			Order order1 = orderServiceImpl.saveOrder(order);
-			return new ResponseEntity<>(order1, HttpStatus.CREATED);
-		} catch (InvalidDateException ex) {
-			// TODO: handle exception
-			return new ResponseEntity<>("not saved / invalid date", HttpStatus.BAD_REQUEST);
-		}
+		ApiResponse<Void> response = orderServiceImpl.saveOrder(order);
+		HttpStatus status = HttpStatus.valueOf(response.getStatusCode());
+
+		return  new ResponseEntity<>(response,status);
 
 	}
 
@@ -89,19 +81,14 @@ public class OrderController {
 	 * @return Response entity with(Status code,message,data with expected response)
 	 */
 	@GetMapping(value = PathConstant.GET_ORDER_BYID)
-	public ResponseEntity<ApiResponse<Order>> getOrder(@PathVariable(value = "id") int id) {
-		Order order = orderServiceImpl.getOrder(id);
+	public ResponseEntity<?> getOrder(@PathVariable(value = "id") int id) {
 
-		if (order != null) {
-			ApiResponse<Order> response = new ApiResponse<>(HttpStatus.OK.value(), MessageTemplate.DATA_FETCHED_SUCCSSFULLY,
-					order);
-			return ResponseEntity.ok(response);
-		} else {
-			ApiResponse<Order> errorResponse = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), MessageTemplate.DATA_FETCHED_FAILED, null);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-		}
+		ApiResponse<Order> orderResponse = orderServiceImpl.getOrder(id);
+		HttpStatus httpStatus = HttpStatus.valueOf(orderResponse.getStatusCode());
+
+		return new ResponseEntity<>(orderResponse, httpStatus);
+
 	}
-
 	/**
 	 * @author Pushpendra
 	 * @apiNote : This Rest API Update Order details 
@@ -109,21 +96,12 @@ public class OrderController {
 	 * @return Response entity with(Status code,message,data with expected response)
 	 */
 	@PutMapping(value = PathConstant.UPDATE_ORDER)
-	public ResponseEntity<ApiResponse<Order>> updateOrder(@RequestBody Order order) {
-		// System.out.println(">>>>>>>>>IIIIIIIIIIIII"+order);// use
-		Order updatedOrder = orderServiceImpl.updateOrder(order);
-		ApiResponse<Order> response = new ApiResponse<>();
+	public ResponseEntity<?> updateOrder(@RequestBody Order order) {
 
-		if (updatedOrder != null) {
-			response.setStatusCode(HttpStatus.OK.value());
-			response.setMessage(MessageTemplate.DATA_UPDATED_SUCCSSFULLY);
-			response.setData(updatedOrder);
-			return ResponseEntity.ok(response);
-		} else {
-			response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			response.setMessage(MessageTemplate.DATA_UPDATED_FAILED);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-		}
+		ApiResponse<Void> response = orderServiceImpl.updateOrder(order);
+		HttpStatus httpStatus = HttpStatus.valueOf(response.getStatusCode());
+
+		return new ResponseEntity<>(response, httpStatus);
 	}
 
 	/**
@@ -134,18 +112,10 @@ public class OrderController {
 	 */
 	@DeleteMapping(value = PathConstant.DELETE_ORDER)
 	public ResponseEntity<ApiResponse> deleteOrder(@PathVariable int id) {
-		boolean deletionStatus = orderServiceImpl.deleteOrder(id);
-		ApiResponse response = new ApiResponse();
+		ApiResponse<Void> response = orderServiceImpl.deleteOrder(id);
+		HttpStatus httpStatus = HttpStatus.valueOf(response.getStatusCode());
 
-		if (deletionStatus) {
-			response.setStatusCode(HttpStatus.OK.value());
-			response.setMessage(MessageTemplate.DATA_DELETED_SUCCSSFULLY);
-			return ResponseEntity.ok(response);
-		} else {
-			response.setStatusCode(HttpStatus.NOT_FOUND.value());
-			response.setMessage(MessageTemplate.DATA_DELETE_FAILED);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-		}
+		return new ResponseEntity<>(response, httpStatus);
 	}
 
 }

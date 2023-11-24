@@ -82,6 +82,14 @@ public class OrderItems {
 		this.order = order;
 	}
 
+	public OrderItems(long itemId, String itemName, int itemQty, BigDecimal itemPrice) {
+
+		this.itemId = itemId;
+		this.itemName = itemName;
+		this.itemQty = itemQty;
+		this.itemPrice = itemPrice;
+
+	}
 	@Override
 	public String toString() {
 		return "OrderItems [itemId=" + itemId + ", itemName=" + itemName + ", itemQty=" + itemQty + ", itemPrice="
